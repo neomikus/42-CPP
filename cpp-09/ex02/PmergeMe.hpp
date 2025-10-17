@@ -55,10 +55,9 @@ namespace dequePmergeMe
 	deckdeck	halve(deckdeck deck);
 	void		constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, 
 									iteratordeckdeck &pairs, std::deque<int> rest);
-	deckdeck	insert(deckdeck &main, deckdeck pend/*, iteratordeckdeck pairs*/);
+	deckdeck	insert(deckdeck &main, deckdeck pend);
 	deckdeck	mergeInsert(deckdeck deck);
 }
 
-void	print_deck(deckdeck deck);
-
+void	print(deckdeck deck);
 #endif

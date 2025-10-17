@@ -1,10 +1,10 @@
 NAME = pmergeme
 
-SRC = main.cpp PmergeMe.cpp
+SRC = main.cpp PmergeMe.cpp PmergeMe.temp.cpp
 OBJ = $(SRC:%.cpp=%.o)
 CC = c++
 RM = rm -f
-CPPFLAGS := #-Wall -Wextra -Werror -std=c++98
+CPPFLAGS := -Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)
 

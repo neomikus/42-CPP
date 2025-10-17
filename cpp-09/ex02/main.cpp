@@ -2,7 +2,7 @@
 
 extern int comparisons;
 
-void print_deck(deckdeck deck) {
+void print(deckdeck deck) {
 	#if __cplusplus > 199711L
 		const char *colors[] {
 			RED,
@@ -34,7 +34,7 @@ void print_deck(deckdeck deck) {
 	std::cout << RESET << std::endl;
 }
 
-static void print_list(listlist lst) {
+void print(listlist lst) {
 	#if __cplusplus > 199711L
 		const char *colors[] {
 			RED,
@@ -66,7 +66,6 @@ static void print_list(listlist lst) {
 	std::cout << RESET << std::endl;
 }
 
-
 static int maxComp(int n)
 {
     int sum = 0;
@@ -78,16 +77,30 @@ static int maxComp(int n)
 }
 
 static void isSorted(listlist sequence, unsigned int argc) {
-	if (argc - 1 != sequence.size())
-	{
+	if (argc - 1 != sequence.size()) {
 		std::cout << "You lost numbers along the way!" << std::endl;
 		return;
 	}
-		for (listlist::iterator it = sequence.begin(); it != --sequence.end();)
-	{
+	for (listlist::iterator it = sequence.begin(); it != --sequence.end();) {
 		listlist::iterator previous = it++;
 		if (previous->back() > it->back()) {
 			std::cout << previous->back() << " " << it->back() << " Not sorted!" << std::endl;
+			return;
+		}
+	}
+	std::cout << "Sorted!" << std::endl;
+}
+
+static void isSorted(deckdeck sequence, unsigned int argc) {
+	if (argc - 1 != sequence.size()) {
+		std::cout << "You lost numbers along the way!" << std::endl;
+		return;
+	}
+	for (deckdeck::iterator it = sequence.begin(); it != --sequence.end();) {
+		deckdeck::iterator previous = it++;
+		if (previous->back() > it->back()) {
+			std::cout << previous->back() << " " << it->back() << " Not sorted!" << std::endl;
+			return;
 		}
 	}
 	std::cout << "Sorted!" << std::endl;
@@ -100,22 +113,23 @@ int	main(int argc, char *argv[]) {
 	listlist lSequence;
 	listPmergeMe::init_list(argv, lSequence);
 	std::cout << "Original Sequence:" << std::endl;
-	print_list(lSequence);
+	print(lSequence);
 	std::cout << std::endl;
 
-	lSequence = listPmergeMe::mergeInsert(lSequence);
 	std::cout << "----- FOR LISTS -----" << std::endl;
+	lSequence = listPmergeMe::mergeInsert(lSequence);
 	isSorted(lSequence, argc);
-	print_list(lSequence);
+	print(lSequence);
 	std::cout << "Comparisons: " << comparisons << ", max: " << maxComp(lSequence.size()) << std::endl;
 	std::cout << std::endl;
 
 	comparisons = 0;
 	deckdeck dSequence;
 	dequePmergeMe::init_deck(argv, dSequence);
-	print_deck(dSequence);
-	dSequence = dequePmergeMe::mergeInsert(dSequence);
 	std::cout << "----- FOR DEQUE -----" << std::endl;
+	dSequence = dequePmergeMe::mergeInsert(dSequence);
+	isSorted(dSequence, argc);
+	print(dSequence);
 	std::cout << "Comparisons: " << comparisons << ", max: " << maxComp(dSequence.size()) << std::endl;
 	std::cout << std::endl;
 

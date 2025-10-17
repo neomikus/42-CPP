@@ -69,8 +69,7 @@ listlist	listPmergeMe::halve(listlist lst) {
 
 void	listPmergeMe::constructMainPend(listlist lst, listlist &main, listlist &pend, iteratorlistlist &pairs, std::list<int> rest) {
 	size_t i = 0;
-	for (listlist::iterator it = lst.begin(); it != lst.end(); it++)
-	{
+	for (listlist::iterator it = lst.begin(); it != lst.end(); it++) {
 		if (it != lst.begin() && !(std::distance(lst.begin(), it) % 2)) {
 			pend.push_back(*it);
 		}
@@ -81,8 +80,7 @@ void	listPmergeMe::constructMainPend(listlist lst, listlist &main, listlist &pen
 		}
 	}
 
-	if (!rest.empty())
-	{
+	if (!rest.empty()) {
 		pend.push_back(rest);
 		pairs.push_back(main.end());
 	}
