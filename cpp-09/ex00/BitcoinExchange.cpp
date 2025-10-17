@@ -10,8 +10,10 @@ std::pair<Date, float>  BitcoinExchange::parseValue(const std::string &line) {
     std::string dateStr = line.substr(0, line.find(","));
     std::string valueStr = line.substr(line.find(",") + 1);
 
-    if (dateStr.find("-") == dateStr.find_last_of("-") || dateStr.find("-") == dateStr.npos)
+    if (dateStr.find("-") == dateStr.find_last_of("-") || dateStr.find("-") == dateStr.npos) {
+        std::cerr << "Error on CSV date: not a date" << std::endl;
         return (std::make_pair(Date(), -1));
+    }
 
     int year = atoi(dateStr.substr(0, dateStr.find("-")).c_str());
     int month = atoi(dateStr.substr(dateStr.find("-") + 1, dateStr.find_last_of("-") - dateStr.find("-") - 1).c_str());
@@ -90,6 +92,8 @@ BitcoinExchange::Date::Date() {
 }
 
 BitcoinExchange::Date::Date(unsigned int year, unsigned int month, unsigned int day) {
+    if (!year)
+        throw std::out_of_range("Year not valid");
 	_year = year;
 	if (!month || month > 12)
 		throw std::out_of_range("Month not valid");

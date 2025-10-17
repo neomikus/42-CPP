@@ -6,8 +6,10 @@ std::pair<Date, float>  parseValue(const std::string &line) {
     std::string dateStr = line.substr(0, line.find(" |"));
     std::string amountStr = line.substr(line.find("| ") + 1);
 
-    if (dateStr.find("-") == dateStr.find_last_of("-") || dateStr.find("-") == dateStr.npos)
+    if (dateStr.find("-") == dateStr.find_last_of("-") || dateStr.find("-") == dateStr.npos) {
+		std::cerr << "Error: not a date" << std::endl;		
         return (std::make_pair(Date(), -1));
+	}
 
     int year = atoi(dateStr.substr(0, dateStr.find("-")).c_str());
     int month = atoi(dateStr.substr(dateStr.find("-") + 1, dateStr.find_last_of("-") - dateStr.find("-") - 1).c_str());
