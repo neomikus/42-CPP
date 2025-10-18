@@ -7,6 +7,7 @@
 #include <utility>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 #include <algorithm>
 
 #define RESET   "\033[0m"
@@ -48,15 +49,15 @@ typedef std::deque<std::deque<std::deque <int> >::iterator > iteratordeckdeck;
 
 namespace dequePmergeMe
 {
-	std::deque<int>	splice(std::deque<int> &deck, std::deque<int>::iterator first, std::deque<int>::iterator last);
-	void 		init_deck(char *argv[], deckdeck &sequence);
-	bool		comp(const int first, const std::deque<int> second);
-	deckdeck	merge(deckdeck deck);
-	deckdeck	halve(deckdeck deck);
-	void		constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, 
-									iteratordeckdeck &pairs, std::deque<int> rest);
-	deckdeck	insert(deckdeck &main, deckdeck pend);
-	deckdeck	mergeInsert(deckdeck deck);
+	void 				init_deck(char *argv[], deckdeck &sequence);
+	bool				comp(const int first, const std::deque<int> second);
+	deckdeck			merge(deckdeck deck);
+	deckdeck			halve(deckdeck deck);
+	void				constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, std::deque<int> rest);
+	deckdeck			insert(deckdeck &main, deckdeck pend);
+	deckdeck			mergeInsert(deckdeck deck);
+	deckdeck			remove_values(deckdeck pend, size_t position);
+	deckdeck::iterator	search_pair(deckdeck &main, deckdeck::iterator pendIt, deckdeck originalPend, deckdeck added);
 }
 
 void	print(deckdeck deck);

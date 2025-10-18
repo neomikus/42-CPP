@@ -1,6 +1,6 @@
 NAME = pmergeme
 
-SRC = main.cpp PmergeMe.cpp PmergeMe.temp.cpp
+SRC = main.cpp PmergeMe.cpp
 OBJ = $(SRC:%.cpp=%.o)
 CC = c++
 RM = rm -f

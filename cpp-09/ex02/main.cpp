@@ -108,6 +108,8 @@ static void isSorted(deckdeck sequence, unsigned int argc) {
 }
 
 int	main(int argc, char *argv[]) {
+	clock_t start, end;
+
 	if (argc < 2)
 		return (0);
 	listlist lSequence;
@@ -117,20 +119,23 @@ int	main(int argc, char *argv[]) {
 	std::cout << std::endl;
 
 	std::cout << "----- FOR LISTS -----" << std::endl;
+	start = clock();
 	lSequence = listPmergeMe::mergeInsert(lSequence);
+	end = clock();
 	isSorted(lSequence, argc);
 	print(lSequence);
 	std::cout << "Comparisons: " << comparisons << ", max: " << maxComp(lSequence.size()) << std::endl;
-	std::cout << std::endl;
+	std::cout << "Time spent: " << ((double(end - start)) / CLOCKS_PER_SEC) * 1000 << " miliseconds" << std::endl;
 
 	comparisons = 0;
 	deckdeck dSequence;
 	dequePmergeMe::init_deck(argv, dSequence);
 	std::cout << "----- FOR DEQUE -----" << std::endl;
+	start = clock();
 	dSequence = dequePmergeMe::mergeInsert(dSequence);
+	end = clock();
 	isSorted(dSequence, argc);
 	print(dSequence);
 	std::cout << "Comparisons: " << comparisons << ", max: " << maxComp(dSequence.size()) << std::endl;
-	std::cout << std::endl;
-
+	std::cout << "Time spent: " << ((double(end - start)) / CLOCKS_PER_SEC) * 1000 << " miliseconds" << std::endl;
 }
