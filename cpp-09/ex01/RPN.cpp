@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-static	bool istoken(char c) {
+static bool istoken(char c) {
 	if (c == '+' || c == '-' || c == '/' || c == '*')
 		return (true);
 	return (false);
@@ -53,4 +53,17 @@ double RPN::calculate(const std::string &arg) {
 		return(std::numeric_limits<double>::quiet_NaN());
 	}
 	return (stack.top());
+}
+
+RPN::RPN(const RPN &model) {
+	(void)model;	
+}
+
+RPN	&RPN::operator=(const RPN &model) {
+	(void)model;
+	return (*this);
+}
+
+RPN::~RPN() {
+
 }
