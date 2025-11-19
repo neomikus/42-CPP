@@ -175,7 +175,7 @@ deckdeck	dequePmergeMe::merge(deckdeck deck) {
 	while (!deck.empty()) {
 		deckdeck::iterator	second = deck.begin();
 		deckdeck::iterator	first = second++;
-		std::deque<int>	temp;
+		std::deque<int>		temp;
 		comparisons++;
 		if (first->back() < second->back()) {
 			temp.insert(temp.end(), first->begin(), first->end());
@@ -241,9 +241,7 @@ void	dequePmergeMe::constructMainPend(deckdeck deck, deckdeck &main, deckdeck &p
 
 }
 
-deckdeck::iterator	dequePmergeMe::search_pair(deckdeck &main, deckdeck::iterator pendIt, 
-	deckdeck originalPend, std::deque<int> pairs, int currentPos) {
-	(void)pendIt; (void)originalPend; (void)currentPos;
+deckdeck::iterator	dequePmergeMe::search_pair(deckdeck main, const std::deque<int> pairs, const int currentPos) {
 
 	if ((long unsigned int)*(pairs.begin() + currentPos) >= main.size()) {
 		return (main.end());
@@ -290,7 +288,7 @@ std::deque<int>	dequePmergeMe::remove_values(std::deque<int> pairs, size_t posit
 }
 
 
-void	update_pairs(std::deque<int> &pairs, int insertedPosition) {
+void	dequePmergeMe::update_pairs(std::deque<int> &pairs, int insertedPosition) {
 	std::deque<int>::iterator it = pairs.begin();
 
 	while (*it < insertedPosition)
@@ -302,10 +300,9 @@ void	update_pairs(std::deque<int> &pairs, int insertedPosition) {
 }
 
 deckdeck	dequePmergeMe::insert(deckdeck &main, deckdeck pend, std::deque<int> &pairs) {
-	unsigned int jacobsthalPos = 3 - 1;
-	unsigned int jacobsthalPrevPos = 1; 
-	size_t jacobsthalN = 3;
-	deckdeck			originalPend = pend;
+	unsigned int	jacobsthalPos = 3 - 1;
+	unsigned int	jacobsthalPrevPos = 1; 
+	size_t			jacobsthalN = 3;
 
 	for (deckdeck::iterator pendIt = pend.begin(); !pend.empty(); pendIt = pend.begin()) {
 		if (pend.size() > 1 && jacobsthalPos - jacobsthalPrevPos > pend.size()) {
@@ -319,7 +316,7 @@ deckdeck	dequePmergeMe::insert(deckdeck &main, deckdeck pend, std::deque<int> &p
 		}
 		int pos = std::distance(pend.begin(), pendIt);
 		for (int currentPos = pos; currentPos >= 0; currentPos--) {
-			deckdeck::iterator inserted = main.insert(std::upper_bound(main.begin(), search_pair(main, pendIt, pend, pairs, currentPos), pendIt->back(), comp), *pendIt);
+			deckdeck::iterator inserted = main.insert(std::upper_bound(main.begin(), search_pair(main, pairs, currentPos), pendIt->back(), comp), *pendIt);
 			update_pairs(pairs, std::distance(main.begin(), inserted));
 			if (pendIt != pend.begin())
 				pendIt--;
