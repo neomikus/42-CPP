@@ -53,11 +53,12 @@ namespace dequePmergeMe
 	bool				comp(const int first, const std::deque<int> second);
 	deckdeck			merge(deckdeck deck);
 	deckdeck			halve(deckdeck deck);
-	void				constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, std::deque<int> rest);
-	deckdeck			insert(deckdeck &main, deckdeck pend);
+	void				constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, std::deque<int> rest, std::deque<int> &pairs);
+	deckdeck			insert(deckdeck &main, deckdeck pend, std::deque<int> &pairs);
 	deckdeck			mergeInsert(deckdeck deck);
 	deckdeck			remove_values(deckdeck pend, size_t position);
-	deckdeck::iterator	search_pair(deckdeck &main, deckdeck::iterator pendIt, deckdeck originalPend, deckdeck added);
+	std::deque<int>		remove_values(std::deque<int> pairs, size_t position);
+	deckdeck::iterator	search_pair(deckdeck &main, deckdeck::iterator pendIt, deckdeck originalPend, std::deque<int> pairs, int currentPos);
 }
 
 void	print(deckdeck deck);

@@ -220,23 +220,35 @@ deckdeck	dequePmergeMe::halve(deckdeck deck) {
 	return (newDeck);
 }
 
-void	dequePmergeMe::constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, std::deque<int> rest) {
+void	dequePmergeMe::constructMainPend(deckdeck deck, deckdeck &main, deckdeck &pend, std::deque<int> rest, std::deque<int> &pairs) {
+	size_t i = 0;
+	
 	for (deckdeck::iterator it = deck.begin(); it != deck.end(); it++) {
-		if (it != deck.begin() && !(std::distance(deck.begin(), it) % 2))
+		if (it != deck.begin() && !(std::distance(deck.begin(), it) % 2)) {
 			pend.push_back(*it);
-		else
+			pairs.push_back(i);
+		}
+		else {
 			main.push_back(*it);
+			i++;
+		}
 	}
 
-	if (!rest.empty())
+	if (!rest.empty()) {
 		pend.push_back(rest);
+		pairs.push_back(main.size());
+	}
+
 }
 
 deckdeck::iterator	dequePmergeMe::search_pair(deckdeck &main, deckdeck::iterator pendIt, 
-	deckdeck originalPend, deckdeck added) {
-	deckdeck::iterator pos = std::find(originalPend.begin(), originalPend.end(), *pendIt);
-	int newPos = std::distance(originalPend.begin(), pos);
-	return (main.begin() + newPos + added.size() + 2);
+	deckdeck originalPend, std::deque<int> pairs, int currentPos) {
+	(void)pendIt; (void)originalPend; (void)currentPos;
+
+	if ((long unsigned int)*(pairs.begin() + currentPos) >= main.size()) {
+		return (main.end());
+	}
+	return (main.begin() + *(pairs.begin() + currentPos));
 }
 
 deckdeck	dequePmergeMe::remove_values(deckdeck pend, size_t position)
@@ -258,12 +270,42 @@ deckdeck	dequePmergeMe::remove_values(deckdeck pend, size_t position)
 	return (newPend);
 }
 
-deckdeck	dequePmergeMe::insert(deckdeck &main, deckdeck pend) {
+std::deque<int>	dequePmergeMe::remove_values(std::deque<int> pairs, size_t position)
+{
+	std::deque<int> newPairs;
+	std::deque<int>::iterator it = pairs.begin();
+	
+	if (pairs.size() == 1)
+		return (newPairs);
+
+	for (size_t i = 0; i != position; i++) {
+		it++;
+	}
+	it++;
+	for (; it != pairs.end(); it++) {
+		newPairs.push_back(*it);
+	}
+
+	return (newPairs);
+}
+
+
+void	update_pairs(std::deque<int> &pairs, int insertedPosition) {
+	std::deque<int>::iterator it = pairs.begin();
+
+	while (*it < insertedPosition)
+		it++;
+
+	for (; it != pairs.end(); it++) {
+		*it += 1;
+	}
+}
+
+deckdeck	dequePmergeMe::insert(deckdeck &main, deckdeck pend, std::deque<int> &pairs) {
 	unsigned int jacobsthalPos = 3 - 1;
 	unsigned int jacobsthalPrevPos = 1; 
 	size_t jacobsthalN = 3;
 	deckdeck			originalPend = pend;
-	deckdeck			added;
 
 	for (deckdeck::iterator pendIt = pend.begin(); !pend.empty(); pendIt = pend.begin()) {
 		if (pend.size() > 1 && jacobsthalPos - jacobsthalPrevPos > pend.size()) {
@@ -277,12 +319,13 @@ deckdeck	dequePmergeMe::insert(deckdeck &main, deckdeck pend) {
 		}
 		int pos = std::distance(pend.begin(), pendIt);
 		for (int currentPos = pos; currentPos >= 0; currentPos--) {
-			main.insert(std::upper_bound(main.begin(), search_pair(main, pendIt, originalPend, added), pendIt->back(), comp), *pendIt);
-			added.push_back(*pendIt);
+			deckdeck::iterator inserted = main.insert(std::upper_bound(main.begin(), search_pair(main, pendIt, pend, pairs, currentPos), pendIt->back(), comp), *pendIt);
+			update_pairs(pairs, std::distance(main.begin(), inserted));
 			if (pendIt != pend.begin())
 				pendIt--;
 		}
 		pend = remove_values(pend, pos);
+		pairs = remove_values(pairs, pos);
 		jacobsthalPrevPos = jacobsthalPos;
 		jacobsthalPos = nextJacobsthal(++jacobsthalN) - 1;
 	}
@@ -310,9 +353,10 @@ deckdeck	dequePmergeMe::mergeInsert(deckdeck deck) {
 
 	deckdeck			main;
 	deckdeck			pend;
+	std::deque<int>		pairs;
 	
-	dequePmergeMe::constructMainPend(deck, main, pend, rest);
-	dequePmergeMe::insert(main, pend);
+	dequePmergeMe::constructMainPend(deck, main, pend, rest, pairs);
+	dequePmergeMe::insert(main, pend, pairs);
 
 	return (main);
 
