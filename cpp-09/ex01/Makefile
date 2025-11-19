@@ -4,7 +4,7 @@ SRC = main.cpp RPN.cpp
 OBJ = $(SRC:%.cpp=%.o)
 CC = c++
 RM = rm -f
-CPPFLAGS := #-Wall -Wextra -Werror -std=c++98
+CPPFLAGS := -Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)
 

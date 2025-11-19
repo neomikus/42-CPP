@@ -26,7 +26,10 @@ std::pair<Date, float>  parseValue(const std::string &line) {
     char *error;
     float   amount = std::strtof(amountStr.c_str(), &error);
     if (error[0] || amount < 0 || amount > 1000) {
-        std::cerr << "Error: amount not a positive number" << std::endl;
+        if (amount > 1000)
+            std::cerr << "Error: amount too big" << std::endl;
+        else
+            std::cerr << "Error: amount not a positive number" << std::endl;
         return (std::make_pair(Date(), -1));
     }
     return (std::make_pair(date, amount));
@@ -51,6 +54,8 @@ int	main(int argc, char **argv)
 	}
 
 	for (std::string entry; std::getline(values, entry);) {
+        if (entry == "date | value")
+            continue;
 		std::pair<Date, float> value = parseValue(entry);	
 	
 		if (value.second != -1)
