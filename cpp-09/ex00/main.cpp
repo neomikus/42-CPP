@@ -2,12 +2,12 @@
 
 typedef BitcoinExchange::Date Date;
 
-std::pair<Date, float>  parseValue(const std::string &line) {
+std::pair<Date, float>  parseValue(const std::string &line, int line_number) {
     std::string dateStr = line.substr(0, line.find(" |"));
     std::string amountStr = line.substr(line.find("| ") + 1);
 
     if (dateStr.find("-") == dateStr.find_last_of("-") || dateStr.find("-") == dateStr.npos) {
-		std::cerr << "Error: not a date" << std::endl;		
+		std::cerr << "Error on line " << line_number << ": not a date" << std::endl;		
         return (std::make_pair(Date(), -1));
 	}
 
@@ -19,7 +19,7 @@ std::pair<Date, float>  parseValue(const std::string &line) {
     try {
         date = Date(year, month, day);
     } catch (std::exception &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "Error on line " << line_number << ": " << e.what() << std::endl;
         return (std::make_pair(Date(), -1));
     }
     
@@ -27,9 +27,9 @@ std::pair<Date, float>  parseValue(const std::string &line) {
     float   amount = std::strtof(amountStr.c_str(), &error);
     if (error[0] || amount < 0 || amount > 1000) {
         if (amount > 1000)
-            std::cerr << "Error: amount too big" << std::endl;
+            std::cerr << "Error on line " << line_number << ": amount too big" << std::endl;
         else
-            std::cerr << "Error: amount not a positive number" << std::endl;
+            std::cerr << "Error on line " << line_number << ": amount not a positive number" << std::endl;
         return (std::make_pair(Date(), -1));
     }
     return (std::make_pair(date, amount));
@@ -43,6 +43,8 @@ int	main(int argc, char **argv)
 		return (ENOENT);
 	}
 
+    std::cout << std::fixed << std::setprecision(2);
+
 	BitcoinExchange database("data.csv");
 	std::ifstream values;
 
@@ -53,14 +55,14 @@ int	main(int argc, char **argv)
 		return (ENOENT);
 	}
 
-	for (std::string entry; std::getline(values, entry);) {
-        if (entry == "date | value")
+    size_t line = 1;
+	for (std::string entry; std::getline(values, entry); line++) {
+        if (line == 1)
             continue;
-		std::pair<Date, float> value = parseValue(entry);	
+		std::pair<Date, float> value = parseValue(entry, line);	
 	
 		if (value.second != -1)
-			database.exchange(value);
+			database.exchange(value, line);
 	}
-	
 
 }

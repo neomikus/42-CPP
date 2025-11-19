@@ -6,12 +6,12 @@ BitcoinExchange::BitcoinExchange() {
 
 };
 
-std::pair<Date, float>  BitcoinExchange::parseValue(const std::string &line) {
+std::pair<Date, float>  BitcoinExchange::parseValue(const std::string &line, size_t line_number) {
     std::string dateStr = line.substr(0, line.find(","));
     std::string valueStr = line.substr(line.find(",") + 1);
 
     if (dateStr.find("-") == dateStr.find_last_of("-") || dateStr.find("-") == dateStr.npos) {
-        std::cerr << "Error on CSV date: not a date" << std::endl;
+        std::cerr << "Error on CSV line " << line_number << ": not a date" << std::endl;
         return (std::make_pair(Date(), -1));
     }
 
@@ -23,14 +23,14 @@ std::pair<Date, float>  BitcoinExchange::parseValue(const std::string &line) {
     try {
         date = Date(year, month, day);
     } catch (std::exception &e) {
-        std::cerr << "Error on CSV date: " << e.what() << std::endl;
+        std::cerr << "Error on CSV line " << line_number << ": " << e.what() << std::endl;
         return (std::make_pair(Date(), -1));
     }
     
     char *error;
     float   value = std::strtof(valueStr.c_str(), &error);
     if (error[0] || value < 0) {
-        std::cerr << "Error on CSV value: Value not a number or outside of range" << std::endl;
+        std::cerr << "Error on CSV line " << line_number << ": Value not a number or outside of range" << std::endl;
         return (std::make_pair(Date(), -1));
     }
     return (std::make_pair(date, value));
@@ -46,8 +46,11 @@ BitcoinExchange::BitcoinExchange(std::string filename) {
         return;
     }
 
-    for (std::string line; std::getline(databaseFile, line);) {
-        std::pair<Date, float> parsed = parseValue(line);
+	size_t line_number = 1;
+    for (std::string line; std::getline(databaseFile, line); line_number++) {
+		if (line_number == 1)
+			continue;
+		std::pair<Date, float> parsed = parseValue(line, line_number);
 
         if (parsed.second != -1)
             database.insert(parsed);
@@ -74,10 +77,14 @@ BitcoinExchange::~BitcoinExchange() {
 
 }
 
-void    BitcoinExchange::exchange(std::pair<Date, float> &entry) {
-    std::map<Date, float>::iterator current = database.find(entry.first);
+void    BitcoinExchange::exchange(std::pair<Date, float> &entry, int line) {
+	if (entry.first < database.begin()->first) {
+		std::cerr << "Error on line " << line << ": Date older than first database entry" << std::endl;
+	}
 
-    if (current == database.end()) {
+	std::map<Date, float>::iterator current = database.find(entry.first);
+
+	if (current == database.end()) {
         current = --database.lower_bound(entry.first);
     }
     std::cout << "You have: $" << entry.second * current->second << " on " << entry.first << std::endl;

@@ -3,7 +3,7 @@
 #include <ctime>
 #include <fstream>
 #include <cstdlib>
-#include <stdlib.h>
+#include <iomanip>
 
 class BitcoinExchange
 {
@@ -39,8 +39,8 @@ class BitcoinExchange
 		BitcoinExchange	&operator=(const BitcoinExchange &model);
 		~BitcoinExchange();
 
-		std::pair<Date, float>	parseValue(const std::string &line);
-		void					exchange(std::pair<Date, float> &entry);
+		std::pair<Date, float>	parseValue(const std::string &line, size_t line_number);
+		void					exchange(std::pair<Date, float> &entryl, int line);
 
 	private:
 		BitcoinExchange();
