@@ -58,7 +58,7 @@ namespace dequePmergeMe
 	deckdeck			mergeInsert(deckdeck deck);
 	deckdeck			remove_values(deckdeck pend, size_t position);
 	std::deque<int>		remove_values(std::deque<int> pairs, size_t position);
-	deckdeck::iterator	search_pair(deckdeck main, const std::deque<int> pairs, const int currentPos);
+	deckdeck::iterator	search_pair(deckdeck &main, const std::deque<int> pairs, const int currentPos);
 	void				update_pairs(std::deque<int> &pairs, int insertedPosition);
 }
 

@@ -241,9 +241,9 @@ void	dequePmergeMe::constructMainPend(deckdeck deck, deckdeck &main, deckdeck &p
 
 }
 
-deckdeck::iterator	dequePmergeMe::search_pair(deckdeck main, const std::deque<int> pairs, const int currentPos) {
+deckdeck::iterator	dequePmergeMe::search_pair(deckdeck &main, const std::deque<int> pairs, const int currentPos) {
 
-	if ((long unsigned int)*(pairs.begin() + currentPos) >= main.size()) {
+	if ((size_t)*(pairs.begin() + currentPos) >= main.size()) {
 		return (main.end());
 	}
 	return (main.begin() + *(pairs.begin() + currentPos));
